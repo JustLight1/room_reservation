@@ -7,6 +7,11 @@ from app.models.meeting_room import MeetingRoom
 from app.schemas.meeting_room import MeetingRoomCreate
 
 
+async def read_all_rooms_from_db(session: AsyncSession) -> list[MeetingRoom]:
+    db_rooms = await session.execute(select(MeetingRoom))
+    return db_rooms.scalars().all()
+
+
 async def create_meeting_room(
         new_room: MeetingRoomCreate,
         session: AsyncSession,
