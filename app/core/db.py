@@ -1,24 +1,23 @@
-from sqlalchemy import Column, Integer
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
+from sqlalchemy import Integer
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.orm import (DeclarativeBase, declared_attr, Mapped,
+                            mapped_column)
 
 from app.core.config import settings
 
 
-class PreBase:
+class Base(DeclarativeBase):
 
-    @declared_attr
-    def __tablename__(cls):
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
         return cls.__name__.lower()
 
-    id = Column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-
-Base = declarative_base(cls=PreBase)
 
 engine = create_async_engine(settings.database_url)
 
-AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)
+AsyncSessionLocal = async_sessionmaker(engine)
 
 
 async def get_async_session():
