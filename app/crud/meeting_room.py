@@ -5,9 +5,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
 from app.models.meeting_room import MeetingRoom
+from app.schemas.meeting_room import MeetingRoomCreate, MeetingRoomUpdate
 
 
-class CRUDMeetingRoom(CRUDBase):
+class CRUDMeetingRoom(CRUDBase[
+    MeetingRoom,
+    MeetingRoomCreate,
+    MeetingRoomUpdate
+]):
 
     async def get_room_id_by_name(
             self,
