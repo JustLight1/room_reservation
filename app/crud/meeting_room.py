@@ -1,5 +1,3 @@
-from typing import Optional
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,7 +16,7 @@ class CRUDMeetingRoom(CRUDBase[
             self,
             room_name: str,
             session: AsyncSession,
-    ) -> Optional[int]:
+    ) -> int | None:
         db_room_id = await session.execute(
             select(MeetingRoom.id).where(
                 MeetingRoom.name == room_name
