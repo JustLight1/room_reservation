@@ -11,3 +11,8 @@ class Reservation(Base):
         Integer,
         ForeignKey('meetingroom.id')
     )
+
+    def __repr__(self):
+        return (
+            f'Уже забронировано с {self.from_reserve} по {self.to_reserve}'
+        )
