@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -13,5 +13,5 @@ if TYPE_CHECKING:
 class MeetingRoom(Base):
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     description: Mapped[str] = mapped_column(Text)
-    reservations: Mapped[List['Reservation']] = relationship(
+    reservations: Mapped[list['Reservation']] = relationship(
         'Reservation', cascade='delete')
