@@ -1,4 +1,4 @@
-from typing import Generic, List, Optional, Type, TypeVar
+from typing import Generic, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 
@@ -26,7 +26,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             self,
             obj_id: int,
             session: AsyncSession,
-    ) -> Optional[ModelType]:
+    ) -> ModelType | None:
         db_obj = await session.execute(
             select(self.model).where(
                 self.model.id == obj_id
@@ -37,13 +37,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     async def get_multi(
             self,
             session: AsyncSession
-    ) -> List[ModelType]:
+    ) -> list[ModelType]:
         db_objs = await session.execute(select(self.model))
         return db_objs.scalars().all()
 
     async def create(
             self,
-            obj_in,
+            obj_in: CreateSchemaType,
             session: AsyncSession,
     ) -> ModelType:
         obj_in_data = obj_in.model_dump()
@@ -55,8 +55,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     async def update(
             self,
-            db_obj,
-            obj_in,
+            db_obj: ModelType,
+            obj_in: UpdateSchemaType,
             session: AsyncSession,
     ) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
@@ -72,7 +72,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     async def remove(
             self,
-            db_obj,
+            db_obj: ModelType,
             session: AsyncSession,
     ) -> ModelType:
         await session.delete(db_obj)
