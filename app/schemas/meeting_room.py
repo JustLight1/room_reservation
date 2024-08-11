@@ -1,11 +1,9 @@
-from typing import Optional
-
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class MeetingRoomBase(BaseModel):
-    name: Optional[str] = Field(None, min_length=1, max_length=100)
-    description: Optional[str] = None
+    name: str | None = Field(None, min_length=1, max_length=100)
+    description: str | None = None
 
 
 class MeetingRoomCreate(MeetingRoomBase):
