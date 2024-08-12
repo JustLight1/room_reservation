@@ -6,6 +6,8 @@ click==8.1.7
 colorama==0.4.6
 exceptiongroup==1.2.2
 fastapi==0.112.0
+fastapi-users==13.0.0
+fastapi-users-db-sqlalchemy==6.0.1
 greenlet==3.0.3
 h11==0.14.0
 httptools==0.6.1
