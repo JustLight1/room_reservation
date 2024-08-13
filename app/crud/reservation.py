@@ -20,7 +20,7 @@ class CRUDReservation(CRUDBase[
             from_reserve: datetime,
             to_reserve: datetime,
             meetingroom_id: int,
-            reservation_id: int | None,
+            reservation_id: int | None = None,
             session: AsyncSession,
     ) -> list[Reservation]:
 
