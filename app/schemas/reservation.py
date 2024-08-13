@@ -48,4 +48,5 @@ class ReservationCreate(ReservationUpdate):
 class ReservationDB(ReservationBase):
     id: int
     meetingroom_id: int
+    user_id: int | None
     model_config = ConfigDict(from_attributes=True)
