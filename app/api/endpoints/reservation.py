@@ -12,6 +12,8 @@ from app.api.validators import (
 from app.schemas.reservation import (
     ReservationCreate, ReservationDB, ReservationUpdate
 )
+from app.core.user import current_user
+from app.models import User
 
 
 router = APIRouter()
@@ -29,13 +31,14 @@ async def get_all_reservations(
 async def create_reservation(
     reservation: ReservationCreate,
     session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user),
 ):
     await check_meeting_room_exists(reservation.meetingroom_id, session)
     await check_reservation_intersections(
         **reservation.model_dump(), session=session
     )
     new_reservation = await reservation_crud.create(
-        reservation, session
+        reservation, session, user
     )
     return new_reservation
 
