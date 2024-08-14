@@ -1,6 +1,6 @@
 <div align=center>
     
-# Приложение SlimLink
+# Приложение Room Reservation
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![FastAPI](https://img.shields.io/badge/fastapi-black?style=for-the-badge&logo=fastapi)
