@@ -39,6 +39,9 @@ async def create_reservation(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ):
+    """
+    Создает новое бронирование.
+    """
     await check_meeting_room_exists(reservation.meetingroom_id, session)
     await check_reservation_intersections(
         **reservation.model_dump(), session=session
