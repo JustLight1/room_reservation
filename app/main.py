@@ -9,6 +9,17 @@ from app.core.init_db import create_first_superuser
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    Асинхронный контекстный менеджер для жизненного цикла приложения.
+
+    Перед стартом приложения создает первого суперпользователя.
+
+    Parameters:
+        app (FastAPI): Экземпляр FastAPI приложения.
+
+    Yield:
+        None
+    """
     await create_first_superuser()
     yield
 
