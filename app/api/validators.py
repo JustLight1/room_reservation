@@ -10,6 +10,16 @@ async def check_name_duplicate(
         room_name: str,
         session: AsyncSession,
 ) -> None:
+    """
+    Проверяет наличие переговорки с заданным именем в базе данных.
+
+    Parameters:
+        room_name (str): Имя переговорной комнаты для проверки уникальности.
+        session (AsyncSession): Сессия базы данных.
+
+    Raises:
+        HTTPException: Если переговорная комната с таким именем уже существует.
+    """
     room_id = await meeting_room_crud.get_room_id_by_name(room_name, session)
     if room_id is not None:
         raise HTTPException(
@@ -22,6 +32,19 @@ async def check_meeting_room_exists(
         meeting_room_id: int,
         session: AsyncSession,
 ) -> MeetingRoom:
+    """
+    Проверяет существование переговорной комнаты по её идентификатору.
+
+    Parameters:
+        meeting_room_id (int): Идентификатор переговорной комнаты.
+        session (AsyncSession): Сессия базы данных.
+
+    Returns:
+        MeetingRoom: Найденная переговорная комната.
+
+    Raises:
+        HTTPException: Если переговорная комната не найдена.
+    """
     meeting_room = await meeting_room_crud.get(meeting_room_id, session)
     if meeting_room is None:
         raise HTTPException(
@@ -32,6 +55,15 @@ async def check_meeting_room_exists(
 
 
 async def check_reservation_intersections(**kwargs) -> None:
+    """
+    Проверяет пересечения бронирования с другими бронированиями.
+
+    Parameters:
+        **kwargs: Параметры бронирования для проверки пересечений.
+
+    Raises:
+        HTTPException: Если есть пересечения с другими бронированиями.
+    """
     reservations = await reservation_crud.get_reservations_at_the_same_time(
         **kwargs
     )
@@ -47,6 +79,21 @@ async def check_reservation_before_edit(
         session: AsyncSession,
         user: User,
 ) -> Reservation:
+    """
+    Проверяет возможность редактирования или удаления бронирования.
+
+    Parameters:
+        reservation_id (int): Идентификатор бронирования.
+        session (AsyncSession): Сессия базы данных.
+        user (User): Текущий пользователь.
+
+    Returns:
+        Reservation: Найденное бронирование.
+
+    Raises:
+        HTTPException: Если бронирование не найдено или пользователь не имеет
+        прав на редактирование.
+    """
     reservation = await reservation_crud.get(
         reservation_id, session
     )
