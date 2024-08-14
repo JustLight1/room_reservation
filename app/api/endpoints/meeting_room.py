@@ -24,6 +24,9 @@ router = APIRouter()
 async def get_all_meeting_rooms(
     session: AsyncSession = Depends(get_async_session),
 ):
+    """
+    Получает список всех переговорных комнат.
+    """
     all_rooms = await meeting_room_crud.get_multi(session)
     return all_rooms
 
@@ -99,6 +102,9 @@ async def get_reservations_for_room(
     meeting_room_id: int,
     session: AsyncSession = Depends(get_async_session)
 ):
+    """
+    Получает все бронирования для определенной переговорной комнаты.
+    """
     await check_meeting_room_exists(
         meeting_room_id, session
     )
