@@ -13,6 +13,9 @@ class CRUDReservation(CRUDBase[
     ReservationCreate,
     ReservationUpdate,
 ]):
+    """
+    Класс для операций CRUD с моделью Reservation.
+    """
 
     async def get_reservations_at_the_same_time(
             self,
@@ -23,6 +26,21 @@ class CRUDReservation(CRUDBase[
             reservation_id: int | None = None,
             session: AsyncSession,
     ) -> list[Reservation]:
+        """
+        Получает бронирования, происходящие в указанный период времени.
+
+        Args:
+            from_reserve (datetime): Время начала бронирования.
+            to_reserve (datetime): Время окончания бронирования.
+            meetingroom_id (int): Идентификатор переговорной комнаты.
+            reservation_id (int or None, default = None): Идентификатор
+                            бронирования (для исключения при поиске).
+            session (AsyncSession): Асинхронная сессия SQLAlchemy.
+
+        Returns:
+            list[Reservation]: Список бронирований, происходящих в
+                                   указанный период.
+        """
 
         select_stmt = select(Reservation).where(
             Reservation.meetingroom_id == meetingroom_id,
@@ -43,7 +61,18 @@ class CRUDReservation(CRUDBase[
             self,
             room_id: int,
             session: AsyncSession
-    ):
+    ) -> list[Reservation]:
+        """
+        Получает будущие бронирования для комнаты.
+
+        Args:
+            room_id (int): Идентификатор переговорной комнаты.
+            session (AsyncSession): Асинхронная сессия SQLAlchemy.
+
+        Returns:
+            list[Reservation]: Список будущих бронирований для указанной
+                               комнаты.
+        """
         reservations = await session.execute(
             select(Reservation).where(
                 Reservation.meetingroom_id == room_id,
@@ -57,7 +86,18 @@ class CRUDReservation(CRUDBase[
             self,
             session: AsyncSession,
             user: User,
-    ):
+    ) -> list[Reservation]:
+        """
+        Получает бронирования, сделанные пользователем.
+
+        Args:
+            session (AsyncSession): Асинхронная сессия SQLAlchemy.
+            user (User): Пользователь, чьи бронирования необходимо получить.
+
+        Returns:
+            list[Reservation]: Список бронирований, сделанных указанным
+                               пользователем.
+        """
         reservations = await session.execute(
             select(Reservation).where(
                 Reservation.user_id == user.id
