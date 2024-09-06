@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
@@ -104,6 +104,34 @@ class CRUDReservation(CRUDBase[
             )
         )
         reservations = reservations.scalars().all()
+        return reservations
+
+    async def get_count_res_at_the_same_time(
+        self,
+        from_reserve: datetime,
+        to_reserve: datetime,
+        session: AsyncSession,
+    ) -> list[dict[str, int]]:
+        """
+        Получает id переговорки и кол-во ее бронирований
+
+        Args:
+            from_reserve (datetime): Время начала бронирования.
+            to_reserve (datetime): Время окончания бронирования.
+            session (AsyncSession): Асинхронная сессия SQLAlchemy.
+
+        Returns:
+            list[{meetingroom_id: id, count: count}]: Список бронирований,
+                                            сделанных указанным пользователем.
+        """
+        reservations = await session.execute(
+            select(Reservation.meetingroom_id,
+                   func.count(Reservation.meetingroom_id)).where(
+                Reservation.from_reserve >= from_reserve,
+                Reservation.to_reserve <= to_reserve
+            ).group_by(Reservation.meetingroom_id)
+        )
+        reservations = reservations.mappings().all()
         return reservations
 
 
